@@ -1,23 +1,74 @@
+//practice.geeksforgeeks.org/problems/longest-prefix-suffix2527/1#
 #include <bits/stdc++.h>
 using namespace std;
 
-vector<pair<char, int>> pieTable(string pattern)
+vector<int> pieTable(string pattern)
 {
-    vector<pair<char, int>> result;
-    int found[26] = {0};
-    for (int i = 0; i < pattern.size(); i++)
+    int n = pattern.size();
+    vector<int> reset(n);
+    reset[0] = 0;
+    int i = 1, len = 0;
+    while (pattern[i] != '\0')
     {
-        if (!found[pattern[i] - 'a'])
+        if (pattern[i] == pattern[len])
         {
-            found[pattern[i] - 'a'] = i + 1;
-            result.push_back({pattern[i], 0});
+            len++;
+            reset[i] = len;
+            i++;
         }
-        else if (found[pattern[i] - 'a'])
+        else
         {
-            result.push_back({pattern[i], found[pattern[i] - 'a']});
+            if (len != 0)
+            {
+                len = reset[len - 1];
+            }
+            else
+            {
+                reset[i] = 0;
+                i++;
+            }
         }
     }
-    return result;
+    return reset;
+}
+
+bool KMP(string mainStr, string pattern)
+{
+    // get the LPS table or pie table
+    vector<int> lps = pieTable(pattern);
+    int N = mainStr.size();
+    int M = lps.size();
+
+    int i = 0; // index for mainStr[]
+    int j = 0; // index for pattern[]
+    bool found = false;
+    while (i < N)
+    {
+        if (pattern[j] == mainStr[i])
+        {
+            j++;
+            i++;
+        }
+
+        if (j == M)
+        {
+            printf("Found pattern at index %d\n", i - j);
+            j = lps[j - 1];
+            found = true;
+        }
+
+        // mismatch after j matches
+        else if (i < N && pattern[j] != mainStr[i])
+        {
+            // Do not match lps[0..lps[j-1]] characters,
+            // they will match anyway
+            if (j != 0)
+                j = lps[j - 1];
+            else
+                i++;
+        }
+    }
+    return found;
 }
 
 int main(int argc, char *argv[])
@@ -25,9 +76,14 @@ int main(int argc, char *argv[])
     string mainStr, pattern;
     cin >> mainStr >> pattern;
 
-    vector<pair<char, int>> pieMap = pieTable(pattern);
-    for (auto temp : pieMap)
-        cout << temp.first << "->" << temp.second << endl;
+    // vector<int> pieMap = pieTable(pattern);
+    // for (int i : pieMap)
+    //     cout << i << " ";
+
+    if (!KMP(mainStr, pattern))
+        cout << "Pattern Not Found";
+
+    cout << endl;
 
     return 0;
 }
