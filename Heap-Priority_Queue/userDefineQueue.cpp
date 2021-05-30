@@ -12,14 +12,15 @@ struct Comp
 {
     bool operator()(const Boxer &a, const Boxer &b)
     {
+        cout << a.strength << " " << b.strength << endl;
         return a.strength < b.strength;
     }
 };
 int main()
 {
     Boxer boxer[3];
-    boxer[0].name = "uday", boxer[0].strength = 23;
     boxer[1].name = "manoj", boxer[1].strength = 33;
+    boxer[0].name = "uday", boxer[0].strength = 23;
     boxer[2].name = "rajiv", boxer[2].strength = 53;
 
     priority_queue<Boxer, vector<Boxer>, Comp> pq;

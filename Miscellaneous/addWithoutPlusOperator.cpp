@@ -6,7 +6,7 @@ using namespace std;
 // while(b){
 //     if(b & 1)
 //         res += a
-//     a >>= 1  doulbe a 
+//     a >>= 1  doulbe a
 //     b <<= 1  half b
 // }
 // return res
@@ -21,7 +21,7 @@ int add(int a, int b)
     while (b)
     {
         // cout << "a = " << a << ", b =" << b << endl;
-        int carry = a & b;
+        uint32_t carry = a & b;
         // cout << "carry = " << carry << endl;
         a ^= b;
         b = carry << 1;
